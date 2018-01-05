@@ -1,0 +1,12 @@
+html {
+  font-size: 15px;
+}
+
+body {
+  margin: 0;
+  background-color: black;
+  color: white;
+  font-size: 1rem;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}

@@ -1,0 +1,159 @@
+Html Webpack Plugin:
+<pre>
+  Error: Child compilation failed:
+  Entry module not found: Error: Can't resolve '/Users/amelie/Github/amelierosse  r/webgl-prototype/public/index.html' in '/Users/amelie/Github/amelierosser/web  gl-prototype':
+  Error: Can't resolve '/Users/amelie/Github/amelierosser/webgl-prototype/public  /index.html' in '/Users/amelie/Github/amelierosser/webgl-prototype'
+  
+  - compiler.js:76 
+    [webgl-prototype]/[html-webpack-plugin]/lib/compiler.js:76:16
+  
+  - Compiler.js:300 compile
+    [webgl-prototype]/[webpack]/lib/Compiler.js:300:11
+  
+  - Compiler.js:510 applyPluginsAsync.err
+    [webgl-prototype]/[webpack]/lib/Compiler.js:510:14
+  
+  - Tapable.js:202 next
+    [webgl-prototype]/[tapable]/lib/Tapable.js:202:11
+  
+  - CachePlugin.js:78 Compiler.<anonymous>
+    [webgl-prototype]/[webpack]/lib/CachePlugin.js:78:5
+  
+  - Tapable.js:206 Compiler.applyPluginsAsyncSeries
+    [webgl-prototype]/[tapable]/lib/Tapable.js:206:13
+  
+  - Compiler.js:507 compilation.seal.err
+    [webgl-prototype]/[webpack]/lib/Compiler.js:507:11
+  
+  - Tapable.js:195 Compilation.applyPluginsAsyncSeries
+    [webgl-prototype]/[tapable]/lib/Tapable.js:195:46
+  
+  - Compilation.js:680 self.applyPluginsAsync.err
+    [webgl-prototype]/[webpack]/lib/Compilation.js:680:19
+  
+  - Tapable.js:195 Compilation.applyPluginsAsyncSeries
+    [webgl-prototype]/[tapable]/lib/Tapable.js:195:46
+  
+  - Compilation.js:671 self.applyPluginsAsync.err
+    [webgl-prototype]/[webpack]/lib/Compilation.js:671:11
+  
+  - Tapable.js:195 Compilation.applyPluginsAsyncSeries
+    [webgl-prototype]/[tapable]/lib/Tapable.js:195:46
+  
+  - Compilation.js:666 self.applyPluginsAsync.err
+    [webgl-prototype]/[webpack]/lib/Compilation.js:666:10
+  
+  - Tapable.js:195 Compilation.applyPluginsAsyncSeries
+    [webgl-prototype]/[tapable]/lib/Tapable.js:195:46
+  
+  - Compilation.js:662 sealPart2
+    [webgl-prototype]/[webpack]/lib/Compilation.js:662:9
+  
+  - Tapable.js:195 Compilation.applyPluginsAsyncSeries
+    [webgl-prototype]/[tapable]/lib/Tapable.js:195:46
+  
+  - Compilation.js:605 Compilation.seal
+    [webgl-prototype]/[webpack]/lib/Compilation.js:605:8
+  
+  - Compiler.js:504 applyPluginsParallel.err
+    [webgl-prototype]/[webpack]/lib/Compiler.js:504:17
+  
+  - Tapable.js:289 
+    [webgl-prototype]/[tapable]/lib/Tapable.js:289:11
+  
+  - Compilation.js:507 _addModuleChain
+    [webgl-prototype]/[webpack]/lib/Compilation.js:507:11
+  
+  - Compilation.js:390 errorAndCallback.bail
+    [webgl-prototype]/[webpack]/lib/Compilation.js:390:4
+  
+  - Compilation.js:413 moduleFactory.create
+    [webgl-prototype]/[webpack]/lib/Compilation.js:413:13
+  
+  - NormalModuleFactory.js:235 factory
+    [webgl-prototype]/[webpack]/lib/NormalModuleFactory.js:235:20
+  
+  - NormalModuleFactory.js:60 resolver
+    [webgl-prototype]/[webpack]/lib/NormalModuleFactory.js:60:20
+  
+  - NormalModuleFactory.js:127 asyncLib.parallel.e
+    [webgl-prototype]/[webpack]/lib/NormalModuleFactory.js:127:20
+  
+  - async.js:3874 
+    [webgl-prototype]/[async]/dist/async.js:3874:9
+  
+  - async.js:473 
+    [webgl-prototype]/[async]/dist/async.js:473:16
+  
+  - async.js:1048 iteratorCallback
+    [webgl-prototype]/[async]/dist/async.js:1048:13
+  
+  - async.js:958 
+    [webgl-prototype]/[async]/dist/async.js:958:16
+  
+  - async.js:3871 
+    [webgl-prototype]/[async]/dist/async.js:3871:13
+  
+  - From previous event:
+  
+  - compiler.js:69 Object.compileTemplate
+    [webgl-prototype]/[html-webpack-plugin]/lib/compiler.js:69:10
+  
+  - index.js:47 Compiler.<anonymous>
+    [webgl-prototype]/[html-webpack-plugin]/index.js:47:40
+  
+  - Tapable.js:293 Compiler.applyPluginsParallel
+    [webgl-prototype]/[tapable]/lib/Tapable.js:293:14
+  
+  - Compiler.js:499 applyPluginsAsync.err
+    [webgl-prototype]/[webpack]/lib/Compiler.js:499:9
+  
+  - Tapable.js:195 Compiler.applyPluginsAsyncSeries
+    [webgl-prototype]/[tapable]/lib/Tapable.js:195:46
+  
+  - Compiler.js:492 Compiler.compile
+    [webgl-prototype]/[webpack]/lib/Compiler.js:492:8
+  
+  - Compiler.js:83 compiler.applyPluginsAsync.err
+    [webgl-prototype]/[webpack]/lib/Compiler.js:83:18
+  
+  - Tapable.js:202 next
+    [webgl-prototype]/[tapable]/lib/Tapable.js:202:11
+  
+  - CachePlugin.js:48 Compiler.compiler.plugin
+    [webgl-prototype]/[webpack]/lib/CachePlugin.js:48:5
+  
+  - Tapable.js:206 Compiler.applyPluginsAsyncSeries
+    [webgl-prototype]/[tapable]/lib/Tapable.js:206:13
+  
+  - Compiler.js:48 Watching._go
+    [webgl-prototype]/[webpack]/lib/Compiler.js:48:17
+  
+  - Compiler.js:40 Watching.compiler.readRecords.err
+    [webgl-prototype]/[webpack]/lib/Compiler.js:40:9
+  
+  - Compiler.js:391 Compiler.readRecords
+    [webgl-prototype]/[webpack]/lib/Compiler.js:391:11
+  
+  - Compiler.js:37 new Watching
+    [webgl-prototype]/[webpack]/lib/Compiler.js:37:17
+  
+  - Compiler.js:222 Compiler.watch
+    [webgl-prototype]/[webpack]/lib/Compiler.js:222:20
+  
+  - webpack.js:389 processOptions
+    [webgl-prototype]/[webpack]/bin/webpack.js:389:13
+  
+  - webpack.js:396 yargs.parse
+    [webgl-prototype]/[webpack]/bin/webpack.js:396:2
+  
+  - yargs.js:533 Object.Yargs.self.parse
+    [webgl-prototype]/[yargs]/yargs.js:533:18
+  
+  - webpack.js:152 Object.<anonymous>
+    [webgl-prototype]/[webpack]/bin/webpack.js:152:7
+  
+  - bootstrap_node.js:389 run
+    bootstrap_node.js:389:7
+  
+</pre><script type="text/javascript" src="bundle.js"></script>

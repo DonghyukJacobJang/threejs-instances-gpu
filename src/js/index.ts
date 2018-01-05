@@ -1,4 +1,7 @@
-import { AxisHelper, Clock, GridHelper, PerspectiveCamera } from 'three';
+import { AxisHelper, Clock, GridHelper, Mesh, PerspectiveCamera, RawShaderMaterial } from 'three';
+import * as THREE from 'three';
+import MaterialModifier from 'three-material-modifier';
+
 import assets from './assets';
 import cameras from './cameras';
 import { DEV_HELPERS, DEV_STATS } from './constants';
@@ -64,9 +67,6 @@ class WebGLPrototype {
         setQuery('cameraDebug', val);
       });
 
-    // Objects
-    this.sphere = new Sphere();
-    scene.add(this.sphere.mesh);
 
     // Listeners
     window.addEventListener('resize', this.onResize, false);
@@ -78,8 +78,82 @@ class WebGLPrototype {
     this.update();
   }
 
+  private objectInit = () => {
+    const vector = new THREE.Vector4();
+    const triangles = 1;
+    const instances = 5000;
+
+    const positions: any = [];
+    const offsets: any = [];
+    const colors: any = [];
+    const orientationsStart: any = [];
+    const orientationsEnd: any = [];
+
+    positions.push(0.025, -0.025, 0);
+    positions.push(-0.025, 0.025, 0);
+    positions.push(0, 0, 0.025);
+
+    // instanced attributes
+    for (let i = 0; i < instances; i++) {
+      // offsets
+      offsets.push(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
+
+      // colors
+      colors.push(Math.random(), Math.random(), Math.random(), Math.random());
+
+      // orientation start
+      vector.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
+      vector.normalize();
+
+      orientationsStart.push(vector.x, vector.y, vector.z, vector.w);
+
+      // orientation end
+      vector.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
+      vector.normalize();
+
+      orientationsEnd.push(vector.x, vector.y, vector.z, vector.w);
+    }
+
+    const geometry = new THREE.InstancedBufferGeometry();
+    geometry.maxInstancedCount = instances; // set so its initalized for dat.GUI, will be set in first draw otherwise
+
+    geometry.addAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+
+    geometry.addAttribute('offset',
+      new THREE.InstancedBufferAttribute(new Float32Array(offsets), 3));
+    geometry.addAttribute('color',
+      new THREE.InstancedBufferAttribute(new Float32Array(colors), 4));
+    geometry.addAttribute('orientationStart',
+      new THREE.InstancedBufferAttribute(new Float32Array(orientationsStart), 4));
+    geometry.addAttribute('orientationEnd',
+      new THREE.InstancedBufferAttribute(new Float32Array(orientationsEnd), 4));
+
+    // material
+    const material = new RawShaderMaterial({
+      uniforms: {
+        time: { value: 1.0 },
+        sineTime: { value: 1.0 }
+      },
+      vertexShader: document.getElementById('vertexShader').textContent,
+      fragmentShader: document.getElementById('fragmentShader').textContent,
+      side: THREE.DoubleSide,
+      transparent: true
+    });
+
+    //
+    const mesh = new Mesh(geometry, material);
+    scene.add(mesh);
+    //
+    console.log(scene);
+
+
+  }
+
   private onAssetsLoaded = (value: any) => {
     console.log('assets loaded', value);
+
+    // Objects
+    this.objectInit();
   };
 
   private onAssetsError = (error: any) => {
@@ -125,9 +199,16 @@ class WebGLPrototype {
     this.controls.main.update();
 
     // Objects
-    const delta = this.clock.getDelta();
+    // const delta = this.clock.getDelta();
+    // this.sphere.update(delta);
 
-    this.sphere.update(delta);
+    const time = performance.now();
+
+    const object = scene.children[3];
+
+    object.rotation.y = time * 0.0005;
+    object.material.uniforms.time.value = time * 0.005;
+    object.material.uniforms.sineTime.value = Math.sin(object.material.uniforms.time.value * 0.05);
 
     if (flags.debugCamera) {
       this.render(cameras.dev, 0, 0, 1, 1);
@@ -140,6 +221,7 @@ class WebGLPrototype {
       this.renderStats.update(renderer);
       stats.end();
     }
+
   };
 }
 

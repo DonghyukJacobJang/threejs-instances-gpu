@@ -2,8 +2,8 @@ import { PerspectiveCamera, Vector3 } from 'three';
 
 const fov = 50;
 const ratio = window.innerWidth / window.innerHeight;
-const near = 1;
-const far = 10;
+const near = 0.1;
+const far = 10000;
 
 function zoom(camera: PerspectiveCamera, value: number = 1) {
   camera.position.set(1 * value, 0.75 * value, 1 * value);

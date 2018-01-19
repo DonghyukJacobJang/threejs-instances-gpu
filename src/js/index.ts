@@ -1,6 +1,8 @@
-import { AxisHelper, Clock, GridHelper, Mesh, PerspectiveCamera, RawShaderMaterial } from 'three';
+import {
+  AxisHelper, Clock, GridHelper, LoadingManager, Mesh, PerspectiveCamera, RawShaderMaterial, SphereGeometry
+} from 'three';
 import * as THREE from 'three';
-import MaterialModifier from 'three-material-modifier';
+import * as OBJLoader from 'three-obj-loader';
 
 import assets from './assets';
 import cameras from './cameras';
@@ -24,8 +26,10 @@ class WebGLPrototype {
   private renderStats: RenderStats;
   private controls: any;
   private sphere: Sphere;
+  private targetObject: any;
 
   constructor() {
+    OBJLoader(THREE);
     // Renderer
     document.body.appendChild(renderer.domElement);
 
@@ -81,7 +85,7 @@ class WebGLPrototype {
   private objectInit = () => {
     const vector = new THREE.Vector4();
     const triangles = 1;
-    const instances = 5000;
+    const instances = 15012;
 
     const positions: any = [];
     const offsets: any = [];
@@ -89,26 +93,55 @@ class WebGLPrototype {
     const orientationsStart: any = [];
     const orientationsEnd: any = [];
 
-    positions.push(0.025, -0.025, 0);
-    positions.push(-0.025, 0.025, 0);
-    positions.push(0, 0, 0.025);
+    // triangle
+    // positions.push(0.025, -0.025, 0);
+    // positions.push(-0.025, 0.025, 0);
+    // positions.push(0, 0, 0.025);
+
+    const box = new SphereGeometry(0.01, 8, 1);
+    // console.log(box);
+
+    box.faces.forEach((face) => {
+      // Vector3
+      positions.push(box.vertices[face.a].x, box.vertices[face.a].y, box.vertices[face.a].z);
+      positions.push(box.vertices[face.b].x, box.vertices[face.b].y, box.vertices[face.b].z);
+      positions.push(box.vertices[face.c].x, box.vertices[face.c].y, box.vertices[face.c].z);
+    });
+
+    const targetOffsets = Array<object>();
+
+    this.targetObject.children.forEach( (child) => {
+      const groupBy = 3;
+      child.material.wireframe = true;
+
+      for (let i = 0; i < child.geometry.attributes.position.array.length; i = i + groupBy) {
+        targetOffsets.push({
+          x: child.geometry.attributes.position.array[i],
+          y: child.geometry.attributes.position.array[i+1],
+          z: child.geometry.attributes.position.array[i+2]
+        });
+      }
+    });
 
     // instanced attributes
     for (let i = 0; i < instances; i++) {
       // offsets
-      offsets.push(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
+      // offsets.push(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
+      offsets.push(targetOffsets[i].x * 0.01, targetOffsets[i].y * 0.01, targetOffsets[i].z * 0.01);
 
       // colors
       colors.push(Math.random(), Math.random(), Math.random(), Math.random());
 
       // orientation start
-      vector.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
+      // vector.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
+      vector.set(.5, .5, .5, .5);
       vector.normalize();
 
       orientationsStart.push(vector.x, vector.y, vector.z, vector.w);
 
       // orientation end
-      vector.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
+      // vector.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
+      vector.set(.5, .5, .5, .5);
       vector.normalize();
 
       orientationsEnd.push(vector.x, vector.y, vector.z, vector.w);
@@ -121,6 +154,8 @@ class WebGLPrototype {
 
     geometry.addAttribute('offset',
       new THREE.InstancedBufferAttribute(new Float32Array(offsets), 3));
+
+
     geometry.addAttribute('color',
       new THREE.InstancedBufferAttribute(new Float32Array(colors), 4));
     geometry.addAttribute('orientationStart',
@@ -137,23 +172,61 @@ class WebGLPrototype {
       vertexShader: document.getElementById('vertexShader').textContent,
       fragmentShader: document.getElementById('fragmentShader').textContent,
       side: THREE.DoubleSide,
-      transparent: true
+      transparent: false
     });
 
     //
     const mesh = new Mesh(geometry, material);
+    // mesh.rotation.y = 90;
+    // mesh.scale.x = 0.3;
+    // mesh.scale.z = 0.3;
     scene.add(mesh);
     //
-    console.log(scene);
+  }
 
+  private loadObj() {
+    const manager = new LoadingManager();
+    manager.onProgress = (item, loaded, total) => {
+      console.log(item, loaded, total);
+    };
 
+    const onProgress = (xhr) => {
+      if (xhr.lengthComputable) {
+        const percentComplete = xhr.loaded / xhr.total * 100;
+        console.log(Math.round(percentComplete) + '% downloaded');
+      }
+    };
+
+    const onError = (xhr) => {
+      console.log(xhr);
+    };
+
+    const loader = new THREE.OBJLoader(manager);
+    loader.load('./assets/webgl/obj/male02.obj', (object) => {
+      object.traverse((child) => {
+        if (child instanceof Mesh) {
+          // texture goes here if needed
+        }
+      });
+      this.targetObject = object;
+
+      this.targetObject.scale.x = 0.02;
+      this.targetObject.scale.y = 0.02;
+      this.targetObject.scale.z = 0.02;
+
+      // console.log(object);
+
+      scene.add(this.targetObject);
+      this.objectInit();
+    }, onProgress, onError);
   }
 
   private onAssetsLoaded = (value: any) => {
     console.log('assets loaded', value);
 
     // Objects
-    this.objectInit();
+    this.loadObj();
+    // this.objectInit();
   };
 
   private onAssetsError = (error: any) => {
@@ -204,11 +277,13 @@ class WebGLPrototype {
 
     const time = performance.now();
 
-    const object = scene.children[3];
+    const object = scene.children[scene.children.length - 1];
 
-    object.rotation.y = time * 0.0005;
-    object.material.uniforms.time.value = time * 0.005;
-    object.material.uniforms.sineTime.value = Math.sin(object.material.uniforms.time.value * 0.05);
+    // if (object.type === 'Mesh') {
+    //   object.rotation.y = time * 0.0005;
+    //   object.material.uniforms.time.value = time * 0.005;
+    //   object.material.uniforms.sineTime.value = Math.sin(object.material.uniforms.time.value * 0.05);
+    // }
 
     if (flags.debugCamera) {
       this.render(cameras.dev, 0, 0, 1, 1);
